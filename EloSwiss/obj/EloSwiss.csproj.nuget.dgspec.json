@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\scratch\\EloSwiss\\EloSwiss\\EloSwiss\\EloSwiss.csproj": {}
+    "C:\\scratch\\EloSwiss\\EloSwiss\\EloSwiss.csproj": {}
   },
   "projects": {
-    "C:\\scratch\\EloSwiss\\EloSwiss\\EloSwiss\\EloSwiss.csproj": {
+    "C:\\scratch\\EloSwiss\\EloSwiss\\EloSwiss.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\scratch\\EloSwiss\\EloSwiss\\EloSwiss\\EloSwiss.csproj",
+        "projectUniqueName": "C:\\scratch\\EloSwiss\\EloSwiss\\EloSwiss.csproj",
         "projectName": "EloSwiss",
-        "projectPath": "C:\\scratch\\EloSwiss\\EloSwiss\\EloSwiss\\EloSwiss.csproj",
+        "projectPath": "C:\\scratch\\EloSwiss\\EloSwiss\\EloSwiss.csproj",
         "packagesPath": "C:\\Users\\Scott.Mackenzie\\.nuget\\packages\\",
-        "outputPath": "C:\\scratch\\EloSwiss\\EloSwiss\\EloSwiss\\obj\\",
+        "outputPath": "C:\\scratch\\EloSwiss\\EloSwiss\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
