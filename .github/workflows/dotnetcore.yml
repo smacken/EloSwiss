@@ -14,7 +14,7 @@ jobs:
     - name: Test
       run: dotnet test EloSwiss.sln --configuration Release /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
     - name: Build NuGet package
-      run: dotnet pack EloSwiss\EloSwiss\EloSwiss.csproj -c Release -o .\dist /p:Version=0.1.${{steps.buildnumber.outputs.build_number}}
+      run: dotnet pack EloSwiss\EloSwiss.csproj -c Release -o .\dist /p:Version=0.1.${{steps.buildnumber.outputs.build_number}}
     - name: Install NuGet client
       uses: warrenbuckley/Setup-Nuget@v1
     - name: Add private GitHub registry to NuGet
