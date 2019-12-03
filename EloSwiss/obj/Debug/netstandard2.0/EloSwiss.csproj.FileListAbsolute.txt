@@ -1,0 +1,8 @@
+C:\scratch\EloSwiss\EloSwiss\EloSwiss\bin\Debug\netstandard2.0\EloSwiss.deps.json
+C:\scratch\EloSwiss\EloSwiss\EloSwiss\bin\Debug\netstandard2.0\EloSwiss.dll
+C:\scratch\EloSwiss\EloSwiss\EloSwiss\bin\Debug\netstandard2.0\EloSwiss.pdb
+C:\scratch\EloSwiss\EloSwiss\EloSwiss\obj\Debug\netstandard2.0\EloSwiss.AssemblyInfoInputs.cache
+C:\scratch\EloSwiss\EloSwiss\EloSwiss\obj\Debug\netstandard2.0\EloSwiss.AssemblyInfo.cs
+C:\scratch\EloSwiss\EloSwiss\EloSwiss\obj\Debug\netstandard2.0\EloSwiss.dll
+C:\scratch\EloSwiss\EloSwiss\EloSwiss\obj\Debug\netstandard2.0\EloSwiss.pdb
+C:\scratch\EloSwiss\EloSwiss\EloSwiss\obj\Debug\netstandard2.0\EloSwiss.csprojAssemblyReference.cache
