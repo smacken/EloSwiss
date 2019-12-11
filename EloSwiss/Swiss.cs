@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace EloSwiss
@@ -29,15 +30,22 @@ namespace EloSwiss
             if (players.Count % 2 == 1)
             {
                 // create bye
+                var byePlayer = players.Where(p => !p.HadBye).OrderBy(p => p.Rating).FirstOrDefault();
+                var byeMatch = new Match { Player1 = byePlayer, Winner = Winner.Player1 };
+                var remaining = players.Except(new List<Player> {byePlayer}).ToList();
+                foreach (var subsequentMatch in BuildMatchPairs(remaining))
+                    yield return new[] { byeMatch }.Concat(subsequentMatch);
             }
             else
             {
                 for (var offset = 0; offset < players.Count / 2; offset++)
                 {
-                    var match = new Match {Player1 = players.ElementAt(offset), Player2 = players.ElementAt(offset+1)};
-                    var subsequentMatches = BuildMatchPairs(players.Except(match.Players).ToList());
-                    foreach (var subsequentMatch in subsequentMatches)
-                        yield return new[] {match}.Concat(subsequentMatch);
+                    var match = new Match { Player1 = players.ElementAt(offset), Player2 = players.ElementAt(offset + 1) };
+                    var remaining = players.Except(match.Players).ToList();
+                    var matches = new List<Match> { match };
+                    foreach (var subsequentMatch in BuildMatchPairs(remaining))
+                        matches.AddRange(subsequentMatch);
+                    yield return matches;
                 }
             }
         }
@@ -73,13 +81,15 @@ namespace EloSwiss
         public (double rating1, double rating2) PredictedScore() => Elo.Probability(Player1.Rating, Player2.Rating);
         public List<Player> Players => new List<Player>(2) { Player1, Player2 };
         public Player PlayerWinner => Winner.HasValue && Winner.Value == EloSwiss.Winner.Player1 ? Player1 : Player2;
-        public override string ToString() => Winner.HasValue ? $"#{Player1} vs #{Player2}" : $"#{Player1} vs #{Player2}, #{PlayerWinner} wins";
+        public override string ToString() => Winner.HasValue ? $"#{Player1.Name} vs #{Player2.Name}" : $"#{Player1.Name} vs #{Player2.Name}, #{PlayerWinner.Name} wins";
     }
 
+    [DebuggerDisplay("Player", Name="{Name}")]
     public class Player
     {
         public double Rating { get; set; }
         public string Name { get; set; }
+        public bool HadBye { get; set; }
 
         public Player(string name, double rating = 1000)
         {

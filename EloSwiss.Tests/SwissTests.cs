@@ -19,9 +19,39 @@ namespace EloSwiss.Tests
             };
             var tournament = new Tournament{Players = players};
             var swiss = new Swiss();
-            // var rounds = swiss.BuildRounds(tournament, Enumerable.Empty<Round>());
-            // rounds.Should().NotBeEmpty();
+            var matches = swiss.BuildMatchPairs(tournament.Players);
+            matches.Should().NotBeEmpty();
             tournament.Should().NotBeNull();
+        }
+
+        [Fact]
+        public void Tournament_BuildsRounds()
+        {
+            var players = new List<Player>
+            {
+                new Player("A"),
+                new Player("B"),
+                new Player("C"),
+                new Player("D")
+            };
+            var tournament = new Tournament { Players = players };
+            var swiss = new Swiss();
+            var rounds = swiss.BuildRounds(tournament, Enumerable.Empty<Round>(), tournament.RoundCount);
+            rounds.Should().NotBeEmpty();
+        }
+
+        [Fact]
+        public void Tournament_MaxRounds()
+        {
+            var players = new List<Player>
+            {
+                new Player("A"),
+                new Player("B"),
+                new Player("C"),
+                new Player("D")
+            };
+            var tournament = new Tournament { Players = players };
+            tournament.RoundCount.Should().Be(2);
         }
     }
 }
