@@ -41,6 +41,23 @@ namespace EloSwiss.Tests
         }
 
         [Fact]
+        public void Tournament_BuildsRound_WithBye()
+        {
+            var players = new List<Player>
+            {
+                new Player("A"),
+                new Player("B"),
+                new Player("C"),
+                new Player("D"),
+                new Player("E")
+            };
+            var tournament = new Tournament { Players = players };
+            var swiss = new Swiss();
+            var rounds = swiss.BuildRounds(tournament, Enumerable.Empty<Round>(), tournament.RoundCount);
+            rounds.Should().NotBeEmpty();
+        }
+
+        [Fact]
         public void Tournament_MaxRounds()
         {
             var players = new List<Player>
@@ -52,6 +69,21 @@ namespace EloSwiss.Tests
             };
             var tournament = new Tournament { Players = players };
             tournament.RoundCount.Should().Be(2);
+        }
+
+        [Fact]
+        public void Tournament_MaxRounds_WithOddCount()
+        {
+            var players = new List<Player>
+            {
+                new Player("A"),
+                new Player("B"),
+                new Player("C"),
+                new Player("D"),
+                new Player("E")
+            };
+            var tournament = new Tournament { Players = players };
+            tournament.RoundCount.Should().Be(3);
         }
     }
 }

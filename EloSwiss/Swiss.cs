@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 
 namespace EloSwiss
@@ -58,6 +57,7 @@ namespace EloSwiss
         public string Name { get; set; }
         public List<Player> Players { get; set; }
         public List<Round> Rounds { get; set; }
+        public List<Standing> PlayerStandings { get; set; }
         public int ActiveRound { get; set; } = 1;
         public int RoundCount => (int)Math.Max(1, Math.Ceiling(Math.Log(Players.Count, 2)));
         public Round Round => Rounds.FirstOrDefault(x => x.Number == ActiveRound);
@@ -70,6 +70,7 @@ namespace EloSwiss
     {
         public int Number { get; set; }
         public List<Match> Matches { get; set; }
+        public override string ToString() => $"Round {Number}";
     }
 
     public class Match
@@ -77,14 +78,14 @@ namespace EloSwiss
         public Player Player1 { get; set; }
         public Player Player2 { get; set; }
         public Winner? Winner { get; set; }
+        public bool IsBye => Player1 == null || Player2 == null;
         public void Score() => (Player1.Rating, Player2.Rating) = Elo.Score(Player1.Rating, Player2.Rating, Winner.Value);
         public (double rating1, double rating2) PredictedScore() => Elo.Probability(Player1.Rating, Player2.Rating);
         public List<Player> Players => new List<Player>(2) { Player1, Player2 };
-        public Player PlayerWinner => Winner.HasValue && Winner.Value == EloSwiss.Winner.Player1 ? Player1 : Player2;
+        public Player PlayerWinner => !Winner.HasValue ? null : Winner.Value == EloSwiss.Winner.Player1 ? Player1 : Player2;
         public override string ToString() => Winner.HasValue ? $"#{Player1.Name} vs #{Player2.Name}" : $"#{Player1.Name} vs #{Player2.Name}, #{PlayerWinner.Name} wins";
     }
 
-    [DebuggerDisplay("Player", Name="{Name}")]
     public class Player
     {
         public double Rating { get; set; }
@@ -96,6 +97,8 @@ namespace EloSwiss
             Name = name;
             Rating = rating;
         }
+
+        public override string ToString() => $"{Name} ({Rating})";
     }
 
     public class Standing
