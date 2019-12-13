@@ -64,6 +64,15 @@ namespace EloSwiss
         // players should only play each-other once
         public bool IsValidMatch(Player player1, Player player2) =>
             !Rounds.SelectMany(round => round.Matches).Any(x => x.Players.Contains(player1) && x.Players.Contains(player2));
+
+        public List<Match> PlayerMatches(Player player) => Rounds.SelectMany(x => 
+                x.Matches.Where(p => p.Players.Contains(player))
+            ).ToList();
+        public List<Player> Opponents(Player player) => Rounds.SelectMany(x =>
+                x.Matches.Where(p => p.Players.Contains(player))
+                    .SelectMany(p => p.Players)
+                    .Where(a => a != player)
+            ).ToList();
     }
 
     public class Round
