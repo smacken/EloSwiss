@@ -64,15 +64,7 @@ namespace EloSwiss
         // players should only play each-other once
         public bool IsValidMatch(Player player1, Player player2) =>
             !Rounds.SelectMany(round => round.Matches).Any(x => x.Players.Contains(player1) && x.Players.Contains(player2));
-
-        public List<Match> PlayerMatches(Player player) => Rounds.SelectMany(x => 
-                x.Matches.Where(p => p.Players.Contains(player))
-            ).ToList();
-        public List<Player> Opponents(Player player) => Rounds.SelectMany(x =>
-                x.Matches.Where(p => p.Players.Contains(player))
-                    .SelectMany(p => p.Players)
-                    .Where(a => a != player)
-            ).ToList();
+        public List<Player> Opponents(Player player) => Rounds.SelectMany(r => r.Opponents(player)).ToList();
     }
 
     public class Round
@@ -80,6 +72,12 @@ namespace EloSwiss
         public int Number { get; set; }
         public List<Match> Matches { get; set; }
         public override string ToString() => $"Round {Number}";
+
+        public List<Player> Opponents(Player player) => Matches
+            .Where(p => p.Players.Contains(player))
+            .SelectMany(p => p.Players)
+            .Where(a => a != player)
+            .ToList();
     }
 
     public class Match
@@ -92,7 +90,9 @@ namespace EloSwiss
         public (double rating1, double rating2) PredictedScore() => Elo.Probability(Player1.Rating, Player2.Rating);
         public List<Player> Players => new List<Player>(2) { Player1, Player2 };
         public Player PlayerWinner => !Winner.HasValue ? null : Winner.Value == EloSwiss.Winner.Player1 ? Player1 : Player2;
-        public override string ToString() => Winner.HasValue ? $"#{Player1.Name} vs #{Player2.Name}" : $"#{Player1.Name} vs #{Player2.Name}, #{PlayerWinner.Name} wins";
+        public override string ToString() => Winner.HasValue 
+            ? $"#{Player1.Name} vs #{Player2.Name}" 
+            : $"#{Player1.Name} vs #{Player2.Name}, #{PlayerWinner.Name} wins";
     }
 
     public class Player
