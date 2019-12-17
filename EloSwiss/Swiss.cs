@@ -30,7 +30,7 @@ namespace EloSwiss
             {
                 // create bye
                 var byePlayer = players.Where(p => !p.HadBye).OrderBy(p => p.Rating).FirstOrDefault();
-                var byeMatch = new Match { Player1 = byePlayer, Winner = Winner.Player1 };
+                var byeMatch = new ByeMatch(byePlayer);
                 var remaining = players.Except(new List<Player> {byePlayer}).ToList();
                 foreach (var subsequentMatch in BuildMatchPairs(remaining))
                     yield return new[] { byeMatch }.Concat(subsequentMatch);
@@ -95,13 +95,27 @@ namespace EloSwiss
             : $"#{Player1.Name} vs #{Player2.Name}, #{PlayerWinner.Name} wins";
     }
 
+    public class ByeMatch : Match
+    {
+        private double _byeScore;
+        public ByeMatch(Player player)
+        {
+            Player1 = player;
+            Winner = EloSwiss.Winner.Player1;
+        }
+
+        public new void Score() => (this.Player1.Rating, _byeScore) = Elo.Score(Player1.Rating, 1000, EloSwiss.Winner.Player1);
+        public override string ToString() => $"#{Player1.Name} Bye";
+    }
+
     public class Player
     {
+        private const int DefaultRating = 1000;
         public double Rating { get; set; }
         public string Name { get; set; }
         public bool HadBye { get; set; }
 
-        public Player(string name, double rating = 1000)
+        public Player(string name, double rating = DefaultRating)
         {
             Name = name;
             Rating = rating;

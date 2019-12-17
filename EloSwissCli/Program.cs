@@ -30,7 +30,7 @@ namespace EloSwissCli
                     using var reader = new StreamReader(option.Csv);
                     using var csv = new CsvReader(reader);
                     csv.Configuration.PrepareHeaderForMatch = (string header, int index) => header.ToLower();
-                    var matches = csv.GetRecords<Match>();
+                    var matches = csv.GetRecords<EloMatch>();
 
                     if (option.Verbose)
                     {
