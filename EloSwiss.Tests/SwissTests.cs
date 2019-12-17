@@ -84,6 +84,8 @@ namespace EloSwiss.Tests
             };
             var tournament = new Tournament { Players = players };
             tournament.RoundCount.Should().Be(3);
+            tournament.Rounds = new Swiss().BuildRounds(tournament, Enumerable.Empty<Round>(), tournament.RoundCount).ToList();
+            tournament.Rounds.Should().NotBeEmpty();
         }
     }
 }
