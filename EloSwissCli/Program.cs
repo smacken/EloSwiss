@@ -38,7 +38,7 @@ namespace EloSwissCli
                 using var reader = new StreamReader(option.Csv);
                 using var csv = new CsvReader(reader);
                 csv.Configuration.PrepareHeaderForMatch = (string header, int index) => header.ToLower();
-                var matches = csv.GetRecords<EloMatch>();
+                var matches = csv.GetRecords<EloSwissMatch>();
             }
 
             bool hasTournamentSetup = !string.IsNullOrEmpty(option.Setup);
@@ -48,7 +48,8 @@ namespace EloSwissCli
                 tournament.Rounds = new Swiss()
                     .BuildRounds(tournament, Enumerable.Empty<Round>(), tournament.RoundCount)
                     .ToList();
-                tournament.ToJson(option.OutputFile);
+                if (option.Output && !string.IsNullOrEmpty(option.OutputFile))
+                    tournament.ToJson(option.OutputFile);
             }
 
             return 0;

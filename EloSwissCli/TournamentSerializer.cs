@@ -15,6 +15,7 @@ namespace EloSwissCli
             var serializer = new JsonSerializer();
             serializer.Converters.Add(new JavaScriptDateTimeConverter());
             serializer.NullValueHandling = NullValueHandling.Ignore;
+            serializer.ContractResolver = new IgnorePropertiesResolver(new[] { "HadBye", "IsBye"});
 
             using var stream = new StreamWriter(outputPath);
             using var writer = new JsonTextWriter(stream); 
