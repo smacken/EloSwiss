@@ -27,11 +27,11 @@ namespace EloSwissCli
             using var file = File.OpenText(path);
             using var reader = new JsonTextReader(file);
             var json = (JObject)JToken.ReadFrom(reader);
-            var playerJson = (JArray)json["players"];
+            var playerJson = (JArray)json["Players"];
             var players = playerJson.ToObject<IList<string>>();
             var tournament = new Tournament
             {
-                Name = json["name"].Value<string>(),
+                Name = json["Name"].Value<string>(),
                 Players = players.Select(p => new Player(p)).ToList()
             };
             return tournament;

@@ -1,7 +1,8 @@
 {
   "profiles": {
     "EloSwissCli": {
-      "commandName": "Project",
+      "commandName": "Executable",
+      "executablePath": ".\\EloSwissCli.exe",
       "commandLineArgs": "\"\" tournament.sample.json out.json --output -v"
     }
   }
