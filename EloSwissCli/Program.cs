@@ -61,7 +61,7 @@ namespace EloSwissCli
             foreach (var err in errs)
                 error.AppendLine(err.ToString());
 
-            Console.Write(error.ToString());
+            Console.Error.WriteLine(error.ToString());
         }
     }
 }

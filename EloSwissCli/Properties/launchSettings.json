@@ -2,7 +2,7 @@
   "profiles": {
     "EloSwissCli": {
       "commandName": "Project",
-      "commandLineArgs": "\"\" tournament.sample.json out.json --output"
+      "commandLineArgs": "\"\" tournament.sample.json out.json --output -v"
     }
   }
 }
