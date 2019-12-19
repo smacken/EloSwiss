@@ -6,11 +6,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="matches.csv" />
     <None Remove="tournament.json" />
     <None Remove="tournament.sample.json" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="matches.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="tournament.sample.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
