@@ -48,6 +48,21 @@ namespace EloSwiss
                 }
             }
         }
+
+        public IEnumerable<Match> BuildPlayoffRound(Tournament tournament, PlayoffRound? round)
+        {
+            var playoffRound = round != null ? (int)round : 16;
+            var players = tournament.Players
+                .OrderBy(x => x.Rating).ThenBy(x => x.Seed)
+                .Take(playoffRound)
+                .ToList();
+            var playerCount = players.Count;
+            players.ForEach(p => p.Rating += 1000);
+            for (var i=0; i < playerCount /2; i++)
+            {
+                yield return new Match { Player1 = players.ElementAt(i), Player2 = players.ElementAt(playerCount-i)};
+            }
+        }
     }
 
     public class Tournament
@@ -114,6 +129,7 @@ namespace EloSwiss
         public double Rating { get; set; }
         public string Name { get; set; }
         public bool HadBye { get; set; }
+        public int Seed { get; set; }
 
         public Player(string name, double rating = DefaultRating)
         {
@@ -144,6 +160,11 @@ namespace EloSwiss
         }
 
         public override string ToString() => $"#{Rank} - {Player}";
+    }
+
+    public enum PlayoffRound
+    {
+        Final=2, SemiFinal=4, QuarterFinal=8, Playoff=16
     }
 
     public static class Extensions
