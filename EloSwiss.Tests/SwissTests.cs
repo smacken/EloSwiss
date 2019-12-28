@@ -117,19 +117,19 @@ namespace EloSwiss.Tests
             var swiss = new Swiss();
             var rounds = swiss.BuildPlayoffRound(tournament, PlayoffRound.Playoff);
             rounds.Should().NotBeEmpty();
-            rounds.Select(x => x.Players).Count().Should().Be(16);
+            rounds.SelectMany(x => x.Players).Count().Should().Be(16);
 
             var quarters = swiss.BuildPlayoffRound(tournament, PlayoffRound.QuarterFinal);
             quarters.Should().NotBeEmpty();
-            quarters.Select(x => x.Players).Count().Should().Be(8);
+            quarters.SelectMany(x => x.Players).Count().Should().Be(8);
 
             var semis = swiss.BuildPlayoffRound(tournament, PlayoffRound.SemiFinal);
             semis.Should().NotBeEmpty();
-            semis.Select(x => x.Players).Count().Should().Be(4);
+            semis.SelectMany(x => x.Players).Count().Should().Be(4);
 
             var final = swiss.BuildPlayoffRound(tournament, PlayoffRound.Final);
             final.Should().NotBeEmpty();
-            final.Select(x => x.Players).Count().Should().Be(2);
+            final.SelectMany(x => x.Players).Count().Should().Be(2);
         }
     }
 }

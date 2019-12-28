@@ -51,17 +51,16 @@ namespace EloSwiss
 
         public IEnumerable<Match> BuildPlayoffRound(Tournament tournament, PlayoffRound? round)
         {
-            var playoffRound = round != null ? (int)round : 16;
             var players = tournament.Players
-                .OrderBy(x => x.Rating).ThenBy(x => x.Seed)
-                .Take(playoffRound)
+                .Take(round != null ? (int)round : 16)
                 .ToList();
             var playerCount = players.Count;
             players.ForEach(p => p.Rating += 1000);
             for (var i=0; i < playerCount /2; i++)
-            {
-                yield return new Match { Player1 = players.ElementAt(i), Player2 = players.ElementAt(playerCount-i)};
-            }
+                yield return new Match { 
+                    Player1 = players.ElementAt(i), 
+                    Player2 = players.ElementAt(playerCount-1-i)
+                };
         }
     }
 
