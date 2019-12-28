@@ -131,5 +131,15 @@ namespace EloSwiss.Tests
             final.Should().NotBeEmpty();
             final.SelectMany(x => x.Players).Count().Should().Be(2);
         }
+
+        [Fact]
+        public void Tournament_BuildsPlayoffs_WithCutoff()
+        {
+            var tournament = new Tournament { Players = playoffPlayers.Take(7).ToList() };
+            var swiss = new Swiss();
+            var rounds = swiss.BuildPlayoffRound(tournament, PlayoffRound.Playoff);
+            rounds.Should().NotBeEmpty();
+            rounds.SelectMany(x => x.Players).Count().Should().Be(4);
+        }
     }
 }

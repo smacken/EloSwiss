@@ -51,8 +51,9 @@ namespace EloSwiss
 
         public IEnumerable<Match> BuildPlayoffRound(Tournament tournament, PlayoffRound? round)
         {
+            int playoffCuttoff = round.Cutoff(tournament.Players.Count);
             var players = tournament.Players
-                .Take(round != null ? (int)round : 16)
+                .Take(playoffCuttoff)
                 .ToList();
             var playerCount = players.Count;
             players.ForEach(p => p.Rating += 1000);
@@ -164,6 +165,28 @@ namespace EloSwiss
     public enum PlayoffRound
     {
         Final=2, SemiFinal=4, QuarterFinal=8, Playoff=16
+    }
+
+    public static class PlayoffRoundExtensions
+    {
+        public static int Cutoff(this PlayoffRound? round, int playerCount)
+        {
+            // number of players could be < round val
+            bool accelerate = round.HasValue && playerCount < (int)round;
+            int playoffCuttoff = 16;
+
+            if (accelerate)
+            {
+                playoffCuttoff = Enum.GetValues(typeof(PlayoffRound))
+                    .Cast<int>()
+                    .Where(x => x < playerCount)
+                    .Max();
+            } else 
+            {
+                playoffCuttoff = round.HasValue ? (int)round : 16;
+            }
+            return playoffCuttoff;
+        }
     }
 
     public static class Extensions

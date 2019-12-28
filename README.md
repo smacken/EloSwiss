@@ -33,6 +33,12 @@ Match results are entered in the following format:
 #A plays #D, #D wins
 ```
 
+Playoffs
+
+Playoff matching can be run at the end of round-robin play.
+Based upon player rankings, matches for playoffs
+e.g. 1vs8, 2vs7, 3vs6, 4vs5
+
 ## Getting Started
 
 1. Run the app by entering the following command in the command shell:
