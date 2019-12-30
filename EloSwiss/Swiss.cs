@@ -32,14 +32,19 @@ namespace EloSwiss
                 var byePlayer = players.Where(p => !p.HadBye).OrderBy(p => p.Rating).FirstOrDefault();
                 var byeMatch = new ByeMatch(byePlayer);
                 var remaining = players.Except(new List<Player> {byePlayer}).ToList();
+                var matches = new List<Match>{byeMatch};
                 foreach (var subsequentMatch in BuildMatchPairs(remaining))
-                    yield return new[] { byeMatch }.Concat(subsequentMatch);
+                    matches.AddRange(subsequentMatch);
+                yield return matches;
             }
             else
             {
                 for (var offset = 0; offset < players.Count / 2; offset++)
                 {
-                    var match = new Match { Player1 = players.ElementAt(offset), Player2 = players.ElementAt(offset + 1) };
+                    var match = new Match { 
+                        Player1 = players.ElementAt(offset), 
+                        Player2 = players.ElementAt(offset + 1) 
+                    };
                     var remaining = players.Except(match.Players).ToList();
                     var matches = new List<Match> { match };
                     foreach (var subsequentMatch in BuildMatchPairs(remaining))
@@ -70,9 +75,9 @@ namespace EloSwiss
         public int Id { get; set; }
         public Guid Key { get; set; } = new Guid();
         public string Name { get; set; }
-        public List<Player> Players { get; set; }
-        public List<Round> Rounds { get; set; }
-        public List<Standing> PlayerStandings { get; set; }
+        public List<Player> Players { get; set; } = new List<Player>();
+        public List<Round> Rounds { get; set; } = new List<Round>();
+        public List<Standing> PlayerStandings { get; set; } = new List<Standing>();
         public int ActiveRound { get; set; } = 1;
         public int RoundCount => (int)Math.Max(1, Math.Ceiling(Math.Log(Players.Count, 2)));
         public Round Round => Rounds.FirstOrDefault(x => x.Number == ActiveRound);
@@ -80,12 +85,18 @@ namespace EloSwiss
         public bool IsValidMatch(Player player1, Player player2) =>
             !Rounds.SelectMany(round => round.Matches).Any(x => x.Players.Contains(player1) && x.Players.Contains(player2));
         public List<Player> Opponents(Player player) => Rounds.SelectMany(r => r.Opponents(player)).ToList();
+
+        public List<Standing> CurrentStandings() 
+        {
+            PlayerStandings = Players.Select(player => new Standing(this, player)).ToList();
+            return PlayerStandings.OrderBy(x => x.Rank).ToList();
+        } 
     }
 
     public class Round
     {
         public int Number { get; set; }
-        public List<Match> Matches { get; set; }
+        public List<Match> Matches { get; set; } = new List<Match>();
         public override string ToString() => $"Round {Number}";
 
         public List<Player> Opponents(Player player) => Matches
@@ -100,6 +111,8 @@ namespace EloSwiss
         public Player Player1 { get; set; }
         public Player Player2 { get; set; }
         public Winner? Winner { get; set; }
+
+        public Player Home { get; set; }
         public bool IsBye => Player1 == null || Player2 == null;
         public void Score() => (Player1.Rating, Player2.Rating) = Elo.Score(Player1.Rating, Player2.Rating, Winner.Value);
         public (double rating1, double rating2) PredictedScore() => Elo.Probability(Player1.Rating, Player2.Rating);
@@ -142,21 +155,25 @@ namespace EloSwiss
 
     public class Standing
     {
+        private Tournament _tournament;
         public readonly Player Player;
-        public readonly int Rank;
-        public readonly decimal MatchPoints;
+        public int Rank => _tournament.Players
+            .OrderBy(player => player.Rating)
+            .ToList()
+            .IndexOf(Player) + 1;
+        public decimal MatchPoints => _tournament.Rounds
+            .SelectMany(round => round.Matches)
+            .Where(match => match.Players.Contains(Player))
+            .Where(match => match.PlayerWinner == Player)
+            .Count();
         public readonly decimal OpponentsMatchWinPercentage;
         public readonly decimal GameWinPercentage;
         public readonly decimal OpponentsGameWinPercentage;
 
-        public Standing(Player player, int rank, decimal matchPoints, decimal opponentsMatchWinPercentage, decimal gameWinPercentage, decimal opponentsGameWinPercentage)
+        public Standing(Tournament tournament, Player player)
         {
+            _tournament = tournament;
             Player = player;
-            Rank = rank;
-            MatchPoints = matchPoints;
-            OpponentsMatchWinPercentage = opponentsMatchWinPercentage;
-            GameWinPercentage = gameWinPercentage;
-            OpponentsGameWinPercentage = opponentsGameWinPercentage;
         }
 
         public override string ToString() => $"#{Rank} - {Player}";
