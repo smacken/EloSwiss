@@ -41,6 +41,22 @@ namespace EloSwiss.Tests
         }
 
         [Fact]
+        public void Tournament_BuildsRoundsSeeded()
+        {
+            var players = new List<Player>
+            {
+                new Player("A") {Seed=1},
+                new Player("B") {Seed=2},
+                new Player("C") {Seed=3},
+                new Player("D") {Seed=4}
+            };
+            var tournament = new Tournament { Players = players };
+            var swiss = new Swiss();
+            var rounds = swiss.BuildRounds(tournament, Enumerable.Empty<Round>(), tournament.RoundCount);
+            rounds.Should().NotBeEmpty();
+        }
+
+        [Fact]
         public void Tournament_BuildsRound_WithBye()
         {
             var players = new List<Player>

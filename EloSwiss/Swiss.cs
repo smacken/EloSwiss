@@ -10,7 +10,7 @@ namespace EloSwiss
         {
             var roundSeed = new Random(activeRound ?? 1);
             var players = tournament.Players
-                .Select(x => new {Player = x, Seed = roundSeed.Next()})
+                .Select(player => new {Player = player, Seed = player.Seed ?? roundSeed.Next()})
                 .OrderBy(x => x.Player.Rating).ThenBy(x => x.Seed)
                 .Select(x => x.Player).ToList();
             var matches = BuildMatchPairs(players);
@@ -104,6 +104,8 @@ namespace EloSwiss
             .SelectMany(p => p.Players)
             .Where(a => a != player)
             .ToList();
+        
+        public List<Player> Winners => Matches.Select(match => match.PlayerWinner).ToList();
     }
 
     public class Match
@@ -142,7 +144,7 @@ namespace EloSwiss
         public double Rating { get; set; }
         public string Name { get; set; }
         public bool HadBye { get; set; }
-        public int Seed { get; set; }
+        public int? Seed { get; set; }
 
         public Player(string name, double rating = DefaultRating)
         {
@@ -167,7 +169,8 @@ namespace EloSwiss
             .Where(match => match.PlayerWinner == Player)
             .Count();
         public readonly decimal OpponentsMatchWinPercentage;
-        public readonly decimal GameWinPercentage;
+        public decimal GameWinPercentage => 
+            (_tournament.Rounds.Count(x => x.Winners.Contains(Player)) / _tournament.RoundCount) * 100;
         public readonly decimal OpponentsGameWinPercentage;
 
         public Standing(Tournament tournament, Player player)
