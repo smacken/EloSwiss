@@ -6,14 +6,19 @@ namespace EloSwiss
 {
     public class Swiss
     {
-        public IEnumerable<Round> BuildRounds(Tournament tournament, IEnumerable<Round> previousRounds, int? activeRound = 1)
+        public IEnumerable<Round> BuildRounds(Tournament tournament, 
+            IEnumerable<Round> previousRounds, 
+            int? activeRound = 1)
         {
             var roundSeed = new Random(activeRound ?? 1);
             var players = tournament.Players
-                .Select(player => new {Player = player, Seed = player.Seed ?? roundSeed.Next()})
+                .Select(player => new {
+                    Player = player, 
+                    Seed = player.Seed ?? roundSeed.Next()
+                })
                 .OrderBy(x => x.Player.Rating).ThenBy(x => x.Seed)
                 .Select(x => x.Player).ToList();
-            var matches = BuildMatchPairs(players);
+            var matches = BuildMatchPairs(players, tournament);
             var previous = activeRound == 1
                 ? Enumerable.Empty<Round>()
                 : BuildRounds(tournament, null, activeRound - 1);
@@ -24,7 +29,7 @@ namespace EloSwiss
             });
         }
 
-        public IEnumerable<IEnumerable<Match>> BuildMatchPairs(IList<Player> players)
+        public IEnumerable<IEnumerable<Match>> BuildMatchPairs(IList<Player> players, Tournament tournament)
         {
             if (players.Count % 2 == 1)
             {
@@ -33,7 +38,7 @@ namespace EloSwiss
                 var byeMatch = new ByeMatch(byePlayer);
                 var remaining = players.Except(new List<Player> {byePlayer}).ToList();
                 var matches = new List<Match>{byeMatch};
-                foreach (var subsequentMatch in BuildMatchPairs(remaining))
+                foreach (var subsequentMatch in BuildMatchPairs(remaining, tournament))
                     matches.AddRange(subsequentMatch);
                 yield return matches;
             }
@@ -41,13 +46,22 @@ namespace EloSwiss
             {
                 for (var offset = 0; offset < players.Count / 2; offset++)
                 {
-                    var match = new Match { 
-                        Player1 = players.ElementAt(offset), 
-                        Player2 = players.ElementAt(offset + 1) 
-                    };
+                    int offsetInc = 1;
+                    bool validMatch = true;
+                    Match match = null;
+                    while (validMatch)
+                    {
+                        match = new Match { 
+                            Player1 = players.ElementAt(offset), 
+                            Player2 = players.ElementAt(offset + offsetInc) 
+                        };
+                        validMatch = !tournament.IsValidMatch(match.Player1, match.Player2);
+                        offsetInc++;     
+                    }
+                    
                     var remaining = players.Except(match.Players).ToList();
                     var matches = new List<Match> { match };
-                    foreach (var subsequentMatch in BuildMatchPairs(remaining))
+                    foreach (var subsequentMatch in BuildMatchPairs(remaining, tournament))
                         matches.AddRange(subsequentMatch);
                     yield return matches;
                 }

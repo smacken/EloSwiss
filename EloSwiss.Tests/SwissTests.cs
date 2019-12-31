@@ -19,7 +19,7 @@ namespace EloSwiss.Tests
             };
             var tournament = new Tournament{Players = players};
             var swiss = new Swiss();
-            var matches = swiss.BuildMatchPairs(tournament.Players);
+            var matches = swiss.BuildMatchPairs(tournament.Players, tournament);
             matches.Should().NotBeEmpty();
             tournament.Should().NotBeNull();
         }
