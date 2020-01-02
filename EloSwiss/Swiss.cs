@@ -135,8 +135,8 @@ namespace EloSwiss
         public List<Player> Players => new List<Player>(2) { Player1, Player2 };
         public Player PlayerWinner => !Winner.HasValue ? null : Winner.Value == EloSwiss.Winner.Player1 ? Player1 : Player2;
         public override string ToString() => Winner.HasValue 
-            ? $"#{Player1.Name} vs #{Player2.Name}" 
-            : $"#{Player1.Name} vs #{Player2.Name}, #{PlayerWinner.Name} wins";
+            ? $"#{Player1.Name} vs #{Player2.Name}, #{PlayerWinner.Name} wins" 
+            : $"#{Player1.Name} vs #{Player2.Name}";
     }
 
     public class ByeMatch : Match
@@ -174,7 +174,7 @@ namespace EloSwiss
         private Tournament _tournament;
         public readonly Player Player;
         public int Rank => _tournament.Players
-            .OrderBy(player => player.Rating)
+            .OrderByDescending(player => player.Rating)
             .ToList()
             .IndexOf(Player) + 1;
         public decimal MatchPoints => _tournament.Rounds
@@ -182,11 +182,9 @@ namespace EloSwiss
             .Where(match => match.Players.Contains(Player))
             .Where(match => match.PlayerWinner == Player)
             .Count();
-        public readonly decimal OpponentsMatchWinPercentage;
         public decimal GameWinPercentage => 
             (_tournament.Rounds.Count(x => x.Winners.Contains(Player)) / _tournament.RoundCount) * 100;
-        public readonly decimal OpponentsGameWinPercentage;
-
+        
         public Standing(Tournament tournament, Player player)
         {
             _tournament = tournament;
