@@ -42,7 +42,7 @@ namespace EloSwissCli
                     using var csv = new CsvReader(reader);
                     csv.Configuration.PrepareHeaderForMatch = (string header, int index) => header.ToLower();
                     var matches = csv.GetRecords<EloSwissMatch>();
-                    tournament = new MatchParser().Parse(tournament, matches.ToList());
+                    tournament = MatchParser.Parse(tournament, matches);
                 }
 
                 if (option.Output && !string.IsNullOrEmpty(option.OutputFile))

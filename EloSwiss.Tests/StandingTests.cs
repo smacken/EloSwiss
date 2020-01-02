@@ -33,6 +33,5 @@ namespace EloSwiss.Tests
             var standings = tournament.CurrentStandings();
             standings.Should().NotBeEmpty();
         }
-
     }
 }
