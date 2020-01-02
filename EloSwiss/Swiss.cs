@@ -47,15 +47,15 @@ namespace EloSwiss
                 for (var offset = 0; offset < players.Count / 2; offset++)
                 {
                     int offsetInc = 1;
-                    bool validMatch = true;
+                    bool validMatch = false;
                     Match match = null;
-                    while (validMatch)
+                    while (!validMatch)
                     {
                         match = new Match { 
                             Player1 = players.ElementAt(offset), 
                             Player2 = players.ElementAt(offset + offsetInc) 
                         };
-                        validMatch = !tournament.IsValidMatch(match.Player1, match.Player2);
+                        validMatch = tournament.IsValidMatch(match.Player1, match.Player2);
                         offsetInc++;     
                     }
                     
