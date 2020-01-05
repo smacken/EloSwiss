@@ -16,7 +16,7 @@ namespace EloSwissCli
         protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
         {
             JsonProperty property = base.CreateProperty(member, memberSerialization);
-            property.ShouldSerialize = (x) => { return !_propsToIgnore.Contains(property.PropertyName); };
+            property.ShouldSerialize = (x) => !_propsToIgnore.Contains(property.PropertyName);
             return property;
         }
     }

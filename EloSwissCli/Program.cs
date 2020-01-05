@@ -16,7 +16,7 @@ namespace EloSwissCli
             Console.WriteLine("EloSwiss Tournament");
             Parser.Default.ParseArguments<Options>(args)
                 .WithParsed<Options>(opts => RunOptionsAndReturnExitCode(opts))
-                .WithNotParsed<Options>((errs) => HandleParseError(errs));
+                .WithNotParsed(HandleParseError);
         }
 
         static int RunOptionsAndReturnExitCode(Options option)

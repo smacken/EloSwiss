@@ -99,7 +99,6 @@ namespace EloSwiss
         public bool IsValidMatch(Player player1, Player player2) =>
             !Rounds.SelectMany(round => round.Matches).Any(x => x.Players.Contains(player1) && x.Players.Contains(player2));
         public List<Player> Opponents(Player player) => Rounds.SelectMany(r => r.Opponents(player)).ToList();
-
         public List<Standing> CurrentStandings() 
         {
             PlayerStandings = Players.Select(player => new Standing(this, player)).ToList();
@@ -112,7 +111,6 @@ namespace EloSwiss
         public int Number { get; set; }
         public List<Match> Matches { get; set; } = new List<Match>();
         public override string ToString() => $"Round {Number}";
-
         public List<Player> Opponents(Player player) => Matches
             .Where(p => p.Players.Contains(player))
             .SelectMany(p => p.Players)
@@ -127,7 +125,6 @@ namespace EloSwiss
         public Player Player1 { get; set; }
         public Player Player2 { get; set; }
         public Winner? Winner { get; set; }
-
         public Player Home { get; set; }
         public bool IsBye => Player1 == null || Player2 == null;
         public void Score() => (Player1.Rating, Player2.Rating) = Elo.Score(Player1.Rating, Player2.Rating, Winner.Value);
@@ -205,19 +202,19 @@ namespace EloSwiss
         {
             // number of players could be < round val
             bool accelerate = round.HasValue && playerCount < (int)round;
-            int playoffCuttoff = 16;
+            int cutoff;
 
             if (accelerate)
             {
-                playoffCuttoff = Enum.GetValues(typeof(PlayoffRound))
+                cutoff = Enum.GetValues(typeof(PlayoffRound))
                     .Cast<int>()
                     .Where(x => x < playerCount)
                     .Max();
             } else 
             {
-                playoffCuttoff = round.HasValue ? (int)round : 16;
+                cutoff = round.HasValue ? (int)round : 16;
             }
-            return playoffCuttoff;
+            return cutoff;
         }
     }
 
