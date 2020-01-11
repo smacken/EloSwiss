@@ -4,10 +4,9 @@ namespace EloSwiss
 {
     public enum Winner
     {
-        Player1,
-        Player2
+        Player1, Player2
     }
-    public class Elo
+    public static class Elo
     {
         public static (double expectedA, double expectedB) Probability(double ratingA, double ratingB)
         {

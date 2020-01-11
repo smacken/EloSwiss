@@ -28,7 +28,7 @@ namespace EloSwiss.Tests
         }
 
         [Fact]
-        public void Match_FavouriteWins()
+        public void Match_FavoriteWins()
         {
             var p1 = new Player("1", 1500);
             var p2 = new Player("2", 900);
