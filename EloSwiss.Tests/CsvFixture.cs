@@ -3,6 +3,7 @@ using System.IO;
 using System.Collections.Generic;
 using EloSwissCli;
 using System;
+using System.Globalization;
 
 namespace EloSwiss.Tests
 {
@@ -11,7 +12,7 @@ namespace EloSwiss.Tests
         public CsvFixture()
         {
             using var reader = new StreamReader("matches.csv");
-            using var csv = new CsvReader(reader);
+            using var csv = new CsvReader(reader, CultureInfo.CurrentCulture);
             csv.Configuration.PrepareHeaderForMatch = (string header, int index) => header.ToLower();
             // csv.Configuration.HasHeaderRecord = false;
             Matches = csv.GetRecords<EloSwissMatch>();

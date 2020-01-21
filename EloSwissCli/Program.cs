@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -39,7 +40,7 @@ namespace EloSwissCli
                 if (hasExisting)
                 {
                     using var reader = new StreamReader(option.Csv);
-                    using var csv = new CsvReader(reader);
+                    using var csv = new CsvReader(reader, CultureInfo.CurrentCulture);
                     csv.Configuration.PrepareHeaderForMatch = (string header, int index) => header.ToLower();
                     var matches = csv.GetRecords<EloSwissMatch>();
                     tournament = MatchParser.Parse(tournament, matches);

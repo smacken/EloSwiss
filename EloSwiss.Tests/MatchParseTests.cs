@@ -1,3 +1,4 @@
+using System.Globalization;
 using FluentAssertions;
 using Xunit;
 using CsvHelper;
@@ -20,7 +21,7 @@ namespace EloSwiss.Tests
         {
             var reader = new StreamReader("matches.csv");
             reader.Peek().Should().NotBe(-1);
-            var csv = new CsvReader(reader);
+            var csv = new CsvReader(reader, CultureInfo.CurrentCulture);
             csv.Should().NotBeNull();
             
             csv.Configuration.PrepareHeaderForMatch = (string header, int index) => header.ToLower();
@@ -32,7 +33,7 @@ namespace EloSwiss.Tests
         {
             var reader = new StreamReader("matches.csv");
             reader.Peek().Should().NotBe(-1);
-            var csv = new CsvReader(reader);
+            var csv = new CsvReader(reader, CultureInfo.CurrentCulture);
             csv.Should().NotBeNull();
             
             csv.Configuration.PrepareHeaderForMatch = (string header, int index) => header.ToLower();
