@@ -13,6 +13,7 @@ namespace EloSwissCli
         public string Player1 { get; set; }
         public string Player2 { get; set; }
         public Winner Winner { get; set; }
+        public Played PlayedAt { get; set; } = Played.Home;
     }
 
     public class EloSwissMatch

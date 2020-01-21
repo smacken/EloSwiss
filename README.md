@@ -33,6 +33,12 @@ Match results are entered in the following format:
 #A plays #D, #D wins
 ```
 
+Home Advantage
+
+Home advantage can be factored into the score ranking algorithm. By convention the first
+of the two team/players is considered to be at home e.g. #A plays #B, #B wins; A has home advantage.
+
+
 Playoffs
 
 Playoff matching can be run at the end of round-robin play.

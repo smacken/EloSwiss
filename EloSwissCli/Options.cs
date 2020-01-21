@@ -21,6 +21,9 @@ namespace EloSwissCli
             [Option("existing", Default = false, HelpText = "Use existing tournament.")]
             public bool Existing { get; set; }
 
+            [Option("homeadvantage", Default = false, HelpText = "Home teams/players are considered to have an advantage.")]
+            public bool HomeAdvantage { get; set; }
+
             [Option('v', "verbose", Required = false, HelpText = "Set output to verbose messages.")]
             public bool Verbose { get; set; }
         }
