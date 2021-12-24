@@ -31,6 +31,6 @@ jobs:
       with:
         nuget-version: 'latest'
     - name: Add private GitHub registry to NuGet
-      run: dotnet nuget add source https://nuget.pkg.github.com/smacken/index.json -name "GPR" -Username smacken -Password ${{ secrets.GITHUB_TOKEN }}
+      run: dotnet nuget add source https://nuget.pkg.github.com/smacken/index.json -n "GPR" -u smacken -p ${{ secrets.GITHUB_TOKEN }}
     - name: Push generated package to GitHub registry
       run: dotnet nuget push .\dist\*.nupkg -s "GPR" --skip-duplicate 
