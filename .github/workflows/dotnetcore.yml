@@ -26,7 +26,6 @@ jobs:
       run: dotnet test EloSwiss.sln --configuration Release /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
     - name: Build NuGet package
       run: dotnet pack EloSwiss\EloSwiss.csproj -c Release -o .\dist /p:Version=0.1.${{steps.buildnumber.outputs.build_number}}
-    - name: Install NuGet client
     - name: Nuget
       uses: nuget/setup-nuget@v1
       with:
