@@ -2,6 +2,7 @@ using System.Globalization;
 using FluentAssertions;
 using Xunit;
 using CsvHelper;
+using CsvHelper.Configuration;
 using System.IO;
 using System.Linq;
 using EloSwissCli;
@@ -24,7 +25,10 @@ namespace EloSwiss.Tests
             var csv = new CsvReader(reader, CultureInfo.CurrentCulture);
             csv.Should().NotBeNull();
             
-            csv.Configuration.PrepareHeaderForMatch = (string header, int index) => header.ToLower();
+            var csvConfig = new CsvConfiguration(CultureInfo.CurrentCulture)
+            { 
+                PrepareHeaderForMatch = args => args.Header.ToLowerInvariant()
+            };
             csv.GetRecords<EloSwissMatch>().Should().NotBeEmpty();
         }
 
@@ -36,8 +40,11 @@ namespace EloSwiss.Tests
             var csv = new CsvReader(reader, CultureInfo.CurrentCulture);
             csv.Should().NotBeNull();
             
-            csv.Configuration.PrepareHeaderForMatch = (string header, int index) => header.ToLower();
             var matches = csv.GetRecords<EloSwissMatch>();
+            var csvConfig = new CsvConfiguration(CultureInfo.CurrentCulture)
+            { 
+                PrepareHeaderForMatch = args => args.Header.ToLowerInvariant()
+            };
             var match = matches.First();
             var elo = match.AsMatch();
             elo.Player1.Should().Be("A");

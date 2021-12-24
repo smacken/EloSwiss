@@ -1,4 +1,5 @@
 using CsvHelper;
+using CsvHelper.Configuration;
 using System.IO;
 using System.Collections.Generic;
 using EloSwissCli;
@@ -13,7 +14,10 @@ namespace EloSwiss.Tests
         {
             using var reader = new StreamReader("matches.csv");
             using var csv = new CsvReader(reader, CultureInfo.CurrentCulture);
-            csv.Configuration.PrepareHeaderForMatch = (string header, int index) => header.ToLower();
+            var csvConfig = new CsvConfiguration(CultureInfo.CurrentCulture)
+            { 
+                PrepareHeaderForMatch = args => args.Header.ToLowerInvariant()
+            };
             // csv.Configuration.HasHeaderRecord = false;
             Matches = csv.GetRecords<EloSwissMatch>();
         }

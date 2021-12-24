@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using CommandLine;
 using CsvHelper;
+using CsvHelper.Configuration;
 using EloSwiss;
 
 namespace EloSwissCli
@@ -41,7 +42,9 @@ namespace EloSwissCli
                 {
                     using var reader = new StreamReader(option.Csv);
                     using var csv = new CsvReader(reader, CultureInfo.CurrentCulture);
-                    csv.Configuration.PrepareHeaderForMatch = (string header, int index) => header.ToLower();
+                    var csvConfig = new CsvConfiguration(CultureInfo.CurrentCulture) {     
+                        PrepareHeaderForMatch = args => args.Header.ToLowerInvariant() 
+                    };
                     var matches = csv.GetRecords<EloSwissMatch>();
                     tournament = MatchParser.Parse(tournament, matches);
                 }
